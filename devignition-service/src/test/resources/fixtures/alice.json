@@ -1,0 +1,8 @@
+{
+  "id": 42,
+  "name": "Alice Jones",
+  "twitterHandle": "@alice_jones",
+  "bio": "Alice is great at writing software",
+  "talkTitle": "Why I like Dropwizard",
+  "talkAbstract": "Stuff that makes Dropwizard cool"
+}
