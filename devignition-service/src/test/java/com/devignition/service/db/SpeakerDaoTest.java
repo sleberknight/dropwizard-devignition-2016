@@ -1,6 +1,7 @@
 package com.devignition.service.db;
 
 import com.devignition.service.core.Speaker;
+import com.devignition.service.db.mapper.SpeakerMapper;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import java.sql.PreparedStatement;
 import java.util.Optional;
 
+import static com.devignition.service.TestHelpers.newSpeaker;
 import static com.devignition.service.TestHelpers.someLoremIpsumText;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,6 +46,18 @@ public class SpeakerDaoTest extends AbstractTransactionalJUnit4SpringContextTest
     public void testGetSpeaker_WhenDoesNotExist() {
         Optional<Speaker> speakerOptional = speakerDao.getSpeaker(Long.MIN_VALUE);
         assertThat(speakerOptional.isPresent()).isFalse();
+    }
+
+    @Test
+    public void testCreateSpeaker() {
+        Speaker unsavedSpeaker = newSpeaker("Bob Smith", "@speakerbob");
+        long id = speakerDao.createSpeaker(unsavedSpeaker);
+        Speaker savedSpeaker = unsavedSpeaker.withId(id);
+
+        jdbcTemplate.query("select * from speakers where id = " + id, rs -> {
+            Speaker found = new SpeakerMapper().map(0, rs, null);
+            assertThat(found).isEqualToComparingFieldByField(savedSpeaker);
+        });
     }
 
     private long insertSpeaker(String name, String twitterHandle, String talkTitle) {

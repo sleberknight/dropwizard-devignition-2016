@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +60,18 @@ public class SpeakerResourceTest {
 
         WebApplicationException webEx = (WebApplicationException) thrown;
         assertThat(webEx.getResponse().getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    public void testCreateSpeaker() {
+        Speaker alice = newSpeaker("Alice", "@alice_jones");
+        long id = 42;
+        when(speakerDao.createSpeaker(alice)).thenReturn(id);
+
+        Response response = speakerResource.createSpeaker(alice);
+        assertThat(response.getStatus()).isEqualTo(201);
+        assertThat(response.getLocation().toString()).isEqualTo("/speakers/42");
+        assertThat(response.getEntity()).isEqualToComparingFieldByField(alice.withId(id));
     }
 
 }

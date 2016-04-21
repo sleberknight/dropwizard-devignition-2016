@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Wither;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -13,6 +14,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @AllArgsConstructor
 @ToString
 @Builder
+@Wither
 public class Speaker {
 
     private Long id;

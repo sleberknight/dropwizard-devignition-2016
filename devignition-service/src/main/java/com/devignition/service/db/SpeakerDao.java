@@ -4,7 +4,10 @@ import com.devignition.service.core.Speaker;
 import com.devignition.service.db.mapper.SpeakerMapper;
 import com.google.common.collect.ImmutableList;
 import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.BindBean;
+import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.sqlobject.customizers.SingleValueResult;
 
@@ -20,5 +23,10 @@ public interface SpeakerDao {
     @Mapper(SpeakerMapper.class)
     @SingleValueResult(Speaker.class)
     Optional<Speaker> getSpeaker(@Bind("id") long id);
+
+    @GetGeneratedKeys
+    @SqlUpdate("insert into speakers (speaker_name, twitter_handle, bio, talk_title, talk_abstract)"
+            + " values (:name, :twitterHandle, :bio, :talkTitle, :talkAbstract)")
+    long createSpeaker(@BindBean Speaker speaker);
 
 }
