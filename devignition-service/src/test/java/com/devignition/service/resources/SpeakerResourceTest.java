@@ -76,6 +76,13 @@ public class SpeakerResourceTest {
     }
 
     @Test
+    public void testUpdateSpeaker() {
+        Speaker alice = newSpeaker(42L, "Alice", "@alice_jones");
+        Speaker updatedAlice = speakerResource.updateSpeaker(alice);
+        assertThat(updatedAlice).isEqualToComparingFieldByField(alice);
+    }
+
+    @Test
     public void testDeleteSpeaker() {
         Response response = speakerResource.deleteSpeaker(new LongParam("42"));
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.NO_CONTENT);

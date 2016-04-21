@@ -53,11 +53,19 @@ public class SpeakerDaoTest extends AbstractTransactionalJUnit4SpringContextTest
         Speaker unsavedSpeaker = newSpeaker("Bob Smith", "@speakerbob");
         long id = speakerDao.createSpeaker(unsavedSpeaker);
         Speaker savedSpeaker = unsavedSpeaker.withId(id);
+        assertPersistedSpeakerEqualsExpected(id, savedSpeaker);
+    }
 
-        jdbcTemplate.query("select * from speakers where id = " + id, rs -> {
-            Speaker found = new SpeakerMapper().map(0, rs, null);
-            assertThat(found).isEqualToComparingFieldByField(savedSpeaker);
-        });
+    @Test
+    public void testUpdateSpeaker() {
+        Speaker unsavedSpeaker = newSpeaker("Bob Smith", "@speakerbob");
+        long id = speakerDao.createSpeaker(unsavedSpeaker);
+        Speaker savedSpeaker = unsavedSpeaker.withId(id);
+
+        Speaker updatedSpeaker = savedSpeaker.withTwitterHandle("@bob_the_speaker").withBio("updated bio");
+        speakerDao.updateSpeaker(updatedSpeaker);
+
+        assertPersistedSpeakerEqualsExpected(id, updatedSpeaker);
     }
 
     @Test
@@ -66,6 +74,13 @@ public class SpeakerDaoTest extends AbstractTransactionalJUnit4SpringContextTest
         assertThat(speakerExists(bobId)).isTrue();
         speakerDao.deleteSpeaker(bobId);
         assertThat(speakerExists(bobId)).isFalse();
+    }
+
+    private void assertPersistedSpeakerEqualsExpected(long id, Speaker expected) {
+        jdbcTemplate.query("select * from speakers where id = " + id, rs -> {
+            Speaker found = new SpeakerMapper().map(0, rs, null);
+            assertThat(found).isEqualToComparingFieldByField(expected);
+        });
     }
 
     private boolean speakerExists(long id) {

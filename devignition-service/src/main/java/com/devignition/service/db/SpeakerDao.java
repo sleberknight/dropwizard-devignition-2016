@@ -29,6 +29,14 @@ public interface SpeakerDao {
             + " values (:name, :twitterHandle, :bio, :talkTitle, :talkAbstract)")
     long createSpeaker(@BindBean Speaker speaker);
 
+    @SqlUpdate("update speakers set speaker_name = :name,"
+            + " twitter_handle = :twitterHandle,"
+            + " bio = :bio,"
+            + " talk_title = :talkTitle,"
+            + " talk_abstract = :talkAbstract"
+            + " where id = :id")
+    void updateSpeaker(@BindBean Speaker speaker);
+
     @SqlUpdate("delete from speakers where id = :it")
     void deleteSpeaker(@Bind long id);
 }
