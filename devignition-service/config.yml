@@ -2,7 +2,7 @@ database:
   driverClass: org.h2.Driver
   user: devignition
 #  password: DevIg$2016
-  password: ${DEVIGNITION_DB_PWD}
+  password: ${DEVIGNITION_DB_PWD:-DevIg$2016}
   url: jdbc:h2:tcp://localhost/~/db/dev_ignition
   validationQuery: "/* DevIgnition Health Check */ SELECT 42"
   properties:

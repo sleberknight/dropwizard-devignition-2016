@@ -15,7 +15,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="twitter_handle" type="varchar(256)"/>
-            <column name="bio" type="varchar(65535)">
+            <column name="bio" type="varchar(65536)">
                 <constraints nullable="false"/>
             </column>
             <column name="talk_title" type="varchar(1024)"/>

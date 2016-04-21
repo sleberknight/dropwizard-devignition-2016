@@ -1,5 +1,7 @@
 package com.devignition.service;
 
+import com.devignition.service.db.SpeakerDao;
+import com.devignition.service.resources.SpeakerResource;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -13,7 +15,8 @@ import org.skife.jdbi.v2.DBI;
 
 public class DevIgnitionApplication extends Application<DevIgnitionConfiguration> {
 
-    private static final boolean STRICT_ENVIRONMENT_VARS = true;
+    // Setting to false lets us define default values in case an environment var isn't present
+    private static final boolean STRICT_ENVIRONMENT_VARS = false;
 
     public static void main(final String[] args) throws Exception {
         new DevIgnitionApplication().run(args);
@@ -37,7 +40,9 @@ public class DevIgnitionApplication extends Application<DevIgnitionConfiguration
         DBIFactory jdbiFactory = new DBIFactory();
         DBI jdbi = jdbiFactory.build(environment, configuration.getDataSourceFactory(), "database");
 
-        // TODO: implement application
+        SpeakerDao speakerDao = jdbi.onDemand(SpeakerDao.class);
+        SpeakerResource speakerResource = new SpeakerResource(speakerDao);
+        environment.jersey().register(speakerResource);
     }
 
     private void enableEnvironmentVariableSubstitution(Bootstrap<DevIgnitionConfiguration> bootstrap) {
