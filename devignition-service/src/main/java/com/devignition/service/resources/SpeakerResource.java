@@ -8,6 +8,7 @@ import io.dropwizard.jersey.params.LongParam;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -56,6 +57,15 @@ public class SpeakerResource {
         return Response.created(location)
                 .entity(savedSpeaker)
                 .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Timed
+    @ExceptionMetered
+    public Response deleteSpeaker(@PathParam("id") LongParam id) {
+        speakerDao.deleteSpeaker(id.get());
+        return Response.noContent().build();
     }
 
 }

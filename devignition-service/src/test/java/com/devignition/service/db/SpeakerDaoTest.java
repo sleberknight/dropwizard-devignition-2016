@@ -60,6 +60,19 @@ public class SpeakerDaoTest extends AbstractTransactionalJUnit4SpringContextTest
         });
     }
 
+    @Test
+    public void testDeleteSpeaker() {
+        long bobId = insertSpeaker("Bob Smith", "@speakerbob", "JDBI is simple");
+        assertThat(speakerExists(bobId)).isTrue();
+        speakerDao.deleteSpeaker(bobId);
+        assertThat(speakerExists(bobId)).isFalse();
+    }
+
+    private boolean speakerExists(long id) {
+        int count = countRowsInTableWhere("speakers", "id = " + id);
+        return count > 0;
+    }
+
     private long insertSpeaker(String name, String twitterHandle, String talkTitle) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {

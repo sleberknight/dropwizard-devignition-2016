@@ -16,6 +16,7 @@ import static com.devignition.service.TestHelpers.newSpeaker;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class SpeakerResourceTest {
@@ -69,9 +70,17 @@ public class SpeakerResourceTest {
         when(speakerDao.createSpeaker(alice)).thenReturn(id);
 
         Response response = speakerResource.createSpeaker(alice);
-        assertThat(response.getStatus()).isEqualTo(201);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         assertThat(response.getLocation().toString()).isEqualTo("/speakers/42");
         assertThat(response.getEntity()).isEqualToComparingFieldByField(alice.withId(id));
+    }
+
+    @Test
+    public void testDeleteSpeaker() {
+        Response response = speakerResource.deleteSpeaker(new LongParam("42"));
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.NO_CONTENT);
+        assertThat(response.hasEntity()).isFalse();
+        verify(speakerDao).deleteSpeaker(42);
     }
 
 }
