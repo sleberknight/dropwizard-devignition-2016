@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
@@ -18,7 +21,11 @@ import lombok.experimental.Wither;
 public class Nest {
 
     private Long id;
+
+    @NotBlank
     private String location;
+
+    @NotNull
     private Long locationId;
 
 }

@@ -1,5 +1,7 @@
 package com.devignition.alexa;
 
+import com.devignition.alexa.db.NestDao;
+import com.devignition.alexa.resources.NestResource;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -39,7 +41,9 @@ public class AlexaApplication extends Application<AlexaConfiguration> {
         DBIFactory jdbiFactory = new DBIFactory();
         DBI jdbi = jdbiFactory.build(environment, configuration.getDataSourceFactory(), "database");
 
-        // TODO: implement application
+        NestDao nestDao = jdbi.onDemand(NestDao.class);
+        NestResource nestResource = new NestResource(nestDao);
+        environment.jersey().register(nestResource);
     }
 
     private void enableEnvironmentVariableSubstitution(Bootstrap<AlexaConfiguration> bootstrap) {
