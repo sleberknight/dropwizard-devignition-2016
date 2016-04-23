@@ -34,7 +34,7 @@ public class SpringTestConfiguration {
     private SLF4JLog slf4jLog = new SLF4JLog();
 
     @Bean
-    public AlexaConfiguration devIgnitionConfiguration() {
+    public AlexaConfiguration alexaConfiguration() {
 
         Validator validator = Validation.byProvider(HibernateValidator.class)
                 .configure()
@@ -56,7 +56,7 @@ public class SpringTestConfiguration {
 
     @Bean
     public DataSource dataSource() {
-        DataSourceFactory dataSource = devIgnitionConfiguration().getDataSourceFactory();
+        DataSourceFactory dataSource = alexaConfiguration().getDataSourceFactory();
         return new SingleConnectionDataSource(dataSource.getUrl(), dataSource.getUser(), "DevIg$2016", true);
     }
 
