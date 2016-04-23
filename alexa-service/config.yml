@@ -1,3 +1,5 @@
+nestServiceBaseURI: http://localhost:8080
+
 server:
   rootPath: /alexa/*
   applicationConnectors:

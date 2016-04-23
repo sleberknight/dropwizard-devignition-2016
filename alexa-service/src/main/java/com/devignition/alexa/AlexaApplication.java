@@ -53,7 +53,7 @@ public class AlexaApplication extends Application<AlexaConfiguration> {
         Client client = new JerseyClientBuilder(environment)
                 .using(configuration.getJerseyClientConfiguration())
                 .build(getName());
-        String baseURI = "http://localhost:8080";  // TODO Make baseURI configurable!!!
+        String baseURI = configuration.getNestServiceBaseURI();
         ExternalNestResource externalNestResource = new ExternalNestResource(nestDao, client, baseURI);
         environment.jersey().register(externalNestResource);
 
