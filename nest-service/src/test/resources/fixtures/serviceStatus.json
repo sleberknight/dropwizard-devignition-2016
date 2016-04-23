@@ -1,0 +1,7 @@
+{
+  "state": "RED",
+  "issues": [
+    "Slowness reported",
+    "Location services offline"
+  ]
+}

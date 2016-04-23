@@ -3,6 +3,7 @@ package com.devignition.nest;
 import com.devignition.nest.core.NestThermostat;
 import com.devignition.nest.db.NestDao;
 import com.devignition.nest.resources.NestResource;
+import com.devignition.nest.resources.StatusResource;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -35,7 +36,6 @@ public class NestApplication extends Application<NestConfiguration> {
         addMigrationsBundle(bootstrap);
 
         String entityPackage = NestThermostat.class.getPackage().getName();
-        ;
         hibernateBundle = newHibernateBundle(entityPackage);
         bootstrap.addBundle(hibernateBundle);
     }
@@ -47,6 +47,8 @@ public class NestApplication extends Application<NestConfiguration> {
         NestDao nestDao = new NestDao(hibernateBundle.getSessionFactory());
         NestResource nestResource = new NestResource(nestDao);
         environment.jersey().register(nestResource);
+
+        environment.jersey().register(new StatusResource());
     }
 
     private void enableEnvironmentVariableSubstitution(Bootstrap<NestConfiguration> bootstrap) {
