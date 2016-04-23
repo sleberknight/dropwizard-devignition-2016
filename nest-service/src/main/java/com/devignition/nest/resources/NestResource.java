@@ -9,6 +9,7 @@ import io.dropwizard.jersey.PATCH;
 import io.dropwizard.jersey.params.LongParam;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -77,7 +78,7 @@ public class NestResource {
     @Timed
     @ExceptionMetered
     @UnitOfWork
-    public NestThermostat updateTemperature(@PathParam("id") LongParam id, Integer newTemp) {
+    public NestThermostat updateTemperature(@PathParam("id") LongParam id, @NotNull Integer newTemp) {
         NestThermostat nest = nestDao.getById(id.get());
         nest.setTemperature(newTemp);
         nestDao.update(nest);
