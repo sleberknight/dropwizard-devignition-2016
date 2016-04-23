@@ -52,6 +52,8 @@ public class ExternalNestResource {
 
     @PATCH
     @Path("/{location}/temp")
+    @Timed
+    @ExceptionMetered
     public Response updateTemperature(@PathParam("location") String location,
                                       @NotNull Integer newTemp) {
 
