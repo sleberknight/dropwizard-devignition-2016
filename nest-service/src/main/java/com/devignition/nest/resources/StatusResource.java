@@ -1,5 +1,7 @@
 package com.devignition.nest.resources;
 
+import com.codahale.metrics.annotation.ExceptionMetered;
+import com.codahale.metrics.annotation.Timed;
 import com.devignition.nest.core.ServiceHealth;
 import com.devignition.nest.core.ServiceStatus;
 import com.google.common.annotations.VisibleForTesting;
@@ -31,6 +33,8 @@ public class StatusResource {
     }
 
     @GET
+    @Timed
+    @ExceptionMetered
     public ServiceStatus status() {
         return randomStatus();
     }
