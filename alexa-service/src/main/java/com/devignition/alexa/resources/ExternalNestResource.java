@@ -60,8 +60,6 @@ public class ExternalNestResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        // TODO Validate temp before sending request? What do we get back for bad values?
-
         UriBuilder updateTempURI = UriBuilder.fromUri(baseURI).path("/nests/{id}/temp");
         ExternalNest externalNest = client.target(updateTempURI)
                 .resolveTemplate("id", nest.get().getLocationId())
