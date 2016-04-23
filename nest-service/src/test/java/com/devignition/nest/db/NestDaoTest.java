@@ -40,8 +40,8 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Test
     public void testGetAll() {
-        long diningRoomId = insertNest("Dining Room", 73, Mode.COOL);
-        long masterBedroomId = insertNest("Master Bedroom", 72, Mode.COOL);
+        long diningRoomId = insertNest(uniquedLocation("Dining Room"), 73, Mode.COOL);
+        long masterBedroomId = insertNest(uniquedLocation("Master Bedroom"), 72, Mode.COOL);
 
         List<NestThermostat> nests = nestDao.getAll();
         assertThat(nests).extracting("id").contains(diningRoomId, masterBedroomId);
@@ -49,7 +49,7 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Test
     public void testGetById_WhenExists() {
-        long id = insertNest("Dining Room", 73, Mode.COOL);
+        long id = insertNest(uniquedLocation("Dining Room"), 73, Mode.COOL);
 
         NestThermostat nest = nestDao.getById(id);
         assertThat(nest.getTemperature()).isEqualTo(73);
@@ -70,7 +70,7 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Test
     public void testCreate() {
-        NestThermostat nest = newNest("Hallway", 70, Mode.HEAT);
+        NestThermostat nest = newNest(uniquedLocation("Hallway"), 70, Mode.HEAT);
         long id = nestDao.create(nest);
         assertThat(nest.getId()).isNotNull();
 
@@ -86,11 +86,12 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Test
     public void testUpdate() {
-        long id = insertNest("Hallway", 70, Mode.HEAT);
+        String location = uniquedLocation("Hallway");
+        long id = insertNest(location, 70, Mode.HEAT);
 
         NestThermostat changedNest = NestThermostat.builder()
                 .id(id)
-                .location("Hallway")
+                .location(location)
                 .temperature(72)
                 .mode(Mode.HEAT)
                 .build();
@@ -102,7 +103,7 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Test
     public void testDelete() {
-        long id = insertNest("Basement", 68, Mode.HEAT);
+        long id = insertNest(uniquedLocation("Basement"), 68, Mode.HEAT);
 
         assertThat(nestExists(id)).isTrue();
         nestDao.delete(id);
@@ -122,6 +123,10 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    private String uniquedLocation(String location) {
+        return location + " " + System.nanoTime();
     }
 
     private boolean nestExists(long id) {
