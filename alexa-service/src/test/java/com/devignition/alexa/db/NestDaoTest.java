@@ -23,9 +23,9 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
     private NestDao nestDao;
 
     @Test
-    public void testGetAllSpeakers() {
-        long kitchenNestId = insertNest("Kitchen", 8765);
-        long bedroomNestId = insertNest("Bedroom", 4242);
+    public void testGetAllNests() {
+        long kitchenNestId = insertNest(uniquedLocation("Kitchen"), 8765);
+        long bedroomNestId = insertNest(uniquedLocation("Bedroom"), 4242);
 
         ImmutableList<Nest> allNests = nestDao.getAllNests();
         assertThat(allNests).extracting("id").contains(kitchenNestId, bedroomNestId);
@@ -33,24 +33,25 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Test
     public void testGetNest_WhenExists() {
-        long nestId = insertNest("Bedroom", 12345);
+        String location = uniquedLocation("Bedroom");
+        long nestId = insertNest(location, 12345);
 
-        Optional<Nest> nestOptional = nestDao.getNest("Bedroom");
+        Optional<Nest> nestOptional = nestDao.getNest(location);
         assertThat(nestOptional.isPresent()).isTrue();
         Nest nest = nestOptional.get();
         assertThat(nest.getId()).isEqualTo(nestId);
-        assertThat(nest.getLocation()).isEqualTo("Bedroom");
+        assertThat(nest.getLocation()).isEqualTo(location);
     }
 
     @Test
     public void testGetNest_WhenDoesNotExist() {
-        Optional<Nest> nestOptional = nestDao.getNest("asdf");
+        Optional<Nest> nestOptional = nestDao.getNest(uniquedLocation("asdf"));
         assertThat(nestOptional.isPresent()).isFalse();
     }
 
     @Test
     public void testCreateNest() {
-        Nest unsavedNest = newNest("Hallway", 5656);
+        Nest unsavedNest = newNest(uniquedLocation("Hallway"), 5656);
         long nestId = nestDao.createNest(unsavedNest);
         Nest expected = unsavedNest.withId(nestId);
         assertPersistedNestEqualsExpected(nestId, expected);
@@ -65,15 +66,20 @@ public class NestDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Test
     public void testDeleteNest() {
-        long nestId = insertNest("Bedroom", 12345);
+        String location = uniquedLocation("Bedroom");
+        long nestId = insertNest(location, 12345);
         assertThat(nestExists(nestId)).isTrue();
-        nestDao.deleteNest("Bedroom");
+        nestDao.deleteNest(location);
         assertThat(nestExists(nestId)).isFalse();
     }
 
     private boolean nestExists(long id) {
         int count = countRowsInTableWhere("nests", "id = " + id);
         return count > 0;
+    }
+
+    private String uniquedLocation(String location) {
+        return location + " " + System.nanoTime();
     }
 
     private long insertNest(String location, long locationId) {
