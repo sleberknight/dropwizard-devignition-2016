@@ -2,6 +2,7 @@ package com.devignition.alexa;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +20,9 @@ public class AlexaConfiguration extends Configuration {
     @Valid
     @NotNull
     private DataSourceFactory dataSourceFactory;
+
+    @JsonProperty("jerseyClient")
+    @Valid
+    @NotNull
+    private JerseyClientConfiguration jerseyClientConfiguration;
 }

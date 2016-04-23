@@ -1,8 +1,11 @@
 package com.devignition.alexa;
 
 import com.devignition.alexa.db.NestDao;
+import com.devignition.alexa.health.ExternalNestServiceHealthCheck;
+import com.devignition.alexa.resources.ExternalNestResource;
 import com.devignition.alexa.resources.NestResource;
 import io.dropwizard.Application;
+import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.PooledDataSourceFactory;
@@ -12,6 +15,8 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.skife.jdbi.v2.DBI;
+
+import javax.ws.rs.client.Client;
 
 public class AlexaApplication extends Application<AlexaConfiguration> {
 
@@ -44,6 +49,15 @@ public class AlexaApplication extends Application<AlexaConfiguration> {
         NestDao nestDao = jdbi.onDemand(NestDao.class);
         NestResource nestResource = new NestResource(nestDao);
         environment.jersey().register(nestResource);
+
+        Client client = new JerseyClientBuilder(environment)
+                .using(configuration.getJerseyClientConfiguration())
+                .build(getName());
+        String baseURI = "http://localhost:8080";  // TODO Make baseURI configurable!!!
+        ExternalNestResource externalNestResource = new ExternalNestResource(nestDao, client, baseURI);
+        environment.jersey().register(externalNestResource);
+
+        environment.healthChecks().register("Nest Service", new ExternalNestServiceHealthCheck(baseURI, client));
     }
 
     private void enableEnvironmentVariableSubstitution(Bootstrap<AlexaConfiguration> bootstrap) {

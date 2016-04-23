@@ -1,5 +1,11 @@
 server:
   rootPath: /alexa/*
+  applicationConnectors:
+    - type: http
+      port: 9090
+  adminConnectors:
+    - type: http
+      port: 9091
 
 database:
   driverClass: org.h2.Driver
@@ -10,6 +16,15 @@ database:
   validationQuery: "/* Alexa DB Health Check */ SELECT 42"
   properties:
     charSet: UTF-8
+
+jerseyClient:
+  timeout: 500 milliseconds
+  connectionTimeout: 500 milliseconds
+  timeToLive: 1 hour
+  maxConnections: 256
+  retries: 0
+  keepAlive: 0 milliseconds
+  cookiesEnabled: false
 
 logging:
   level: INFO
