@@ -13,13 +13,23 @@ public class SpeakerTest {
 
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
 
+    private static final String SPEAKER_JSON = fixture("fixtures/alice.json");
+
     @Test
     public void testJsonSerialization() throws IOException {
+        String expected = MAPPER.writeValueAsString(MAPPER.readValue(SPEAKER_JSON, Speaker.class));
 
-        String aliceJson = fixture("fixtures/alice.json");
-        String expected = MAPPER.writeValueAsString(MAPPER.readValue(aliceJson, Speaker.class));
+        Speaker alice = speakerForTest();
+        assertThat(MAPPER.writeValueAsString(alice)).isEqualTo(expected);
+    }
 
-        Speaker alice = Speaker.builder()
+    @Test
+    public void testJsonDeserialization() throws IOException {
+        assertThat(MAPPER.readValue(SPEAKER_JSON, Speaker.class)).isEqualTo(speakerForTest());
+    }
+
+    private Speaker speakerForTest() {
+        return Speaker.builder()
                 .id(42L)
                 .name("Alice Jones")
                 .twitterHandle("@alice_jones")
@@ -27,7 +37,6 @@ public class SpeakerTest {
                 .talkTitle("Why I like Dropwizard")
                 .talkAbstract("Stuff that makes Dropwizard cool")
                 .build();
-        assertThat(MAPPER.writeValueAsString(alice)).isEqualTo(expected);
     }
 
 }
