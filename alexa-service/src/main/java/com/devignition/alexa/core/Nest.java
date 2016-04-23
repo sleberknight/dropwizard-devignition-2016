@@ -19,5 +19,6 @@ public class Nest {
 
     private Long id;
     private String location;
+    private Long locationId;
 
 }

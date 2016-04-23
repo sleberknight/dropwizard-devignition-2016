@@ -22,6 +22,7 @@ public class NestTest {
         Nest nest = Nest.builder()
                 .id(1L)
                 .location("Basement")
+                .locationId(88L)
                 .build();
         assertThat(MAPPER.writeValueAsString(nest)).isEqualTo(expected);
     }

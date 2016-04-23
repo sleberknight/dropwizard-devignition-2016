@@ -17,4 +17,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="002-add-location_id-field-to-nests-table" author="sleberknight">
+        <addColumn tableName="nests">
+            <column name="location_id" type="bigint">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_location_id"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
