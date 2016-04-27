@@ -8,6 +8,14 @@ database:
   properties:
     charSet: UTF-8
 
+server:
+  applicationConnectors:
+    - type: http
+      port: 7070
+  adminConnectors:
+    - type: http
+      port: 7071
+
 logging:
   level: INFO
   loggers:
