@@ -14,6 +14,8 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+// TODO Add scheduled exec to Nest service for self-diagnostics or something like that…
+
 public class NestApplication extends Application<NestConfiguration> {
 
     // Setting to false lets us define default values in case an environment var isn't present
