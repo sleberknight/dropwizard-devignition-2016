@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -28,13 +30,16 @@ public class NestThermostat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Length(max = 256)
     private String location;
 
+    @NotNull
     @Min(60)
     @Max(90)
     private Integer temperature;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Mode mode;
 
