@@ -74,6 +74,15 @@ public class NestResourceIntegrationTest {
     }
 
     @Test
+    public void testGetNestById_WhenNonNumericId() {
+        Response response = RESOURCE.client()
+                .target("/nests/foo")
+                .request()
+                .get(Response.class);
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.BAD_REQUEST);
+    }
+
+    @Test
     public void testAddNest() {
         long id = 42L;
         NestThermostat nestForPostRequest = newNest(id, "Hallway", 74, Mode.COOL);
@@ -96,6 +105,18 @@ public class NestResourceIntegrationTest {
                 return arg.equals(nestForPostRequest);
             }
         }));
+    }
+
+    @Test
+    public void testAddAnInvalidNest() {
+        NestThermostat nest = new NestThermostat();
+
+        Response response = RESOURCE.client()
+                .target("/nests")
+                .request()
+                .post(Entity.entity(nest, MediaType.APPLICATION_JSON));
+
+        assertThat(response.getStatus()).isEqualTo(422);
     }
 
 }
