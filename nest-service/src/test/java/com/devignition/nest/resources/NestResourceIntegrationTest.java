@@ -5,6 +5,7 @@ import com.devignition.nest.core.NestThermostat;
 import com.devignition.nest.db.NestDao;
 import com.google.common.collect.Lists;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.hamcrest.CustomTypeSafeMatcher;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import java.util.List;
 import static com.devignition.nest.TestHelpers.newNest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -82,10 +84,18 @@ public class NestResourceIntegrationTest {
                 .target("/nests")
                 .request()
                 .post(Entity.entity(nestForPostRequest, MediaType.APPLICATION_JSON));
+
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
         assertThat(response.getHeaderString("Location")).contains("/nests/42");
         NestThermostat createdNest = response.readEntity(NestThermostat.class);
         assertThat(createdNest).isEqualToComparingFieldByField(nestForPostRequest);
+
+        verify(NEST_DAO).create(argThat(new CustomTypeSafeMatcher<NestThermostat>(nestForPostRequest.toString()) {
+            @Override
+            protected boolean matchesSafely(NestThermostat arg) {
+                return arg.equals(nestForPostRequest);
+            }
+        }));
     }
 
 }
